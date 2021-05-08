@@ -41,7 +41,7 @@ export class PolicyGuard implements CanActivate {
     const ability = this.abilityFactory.createForUser(user);
 
     const service = this.moduleRef.get(payload.repo) as Repository<any>;
-    const item = service.findOne(id);
+    const item = await service.findOne(id);
 
     return ability.can(payload.action, item);
   }

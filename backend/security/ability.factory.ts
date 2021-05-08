@@ -29,6 +29,7 @@ export class AbilityFactory {
     );
 
     can(Action.Update, Todo, { userId: user.id });
+    can(Action.Delete, Todo, { userId: user.id });
 
     return build({
       detectSubjectType: (item) => {

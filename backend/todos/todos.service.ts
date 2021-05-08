@@ -1,74 +1,38 @@
 import { Injectable } from "@nestjs/common";
+import { plainToClass } from "class-transformer";
 import { Repository } from "../common/interfaces/repository.interface";
+import { PrismaService } from "../prisma/prisma.service";
 import { Todo } from "./entities/todo.entity";
-
-let id = 0;
 
 @Injectable()
 export class TodosService implements Repository<Todo> {
-  private readonly todos: Todo[] = [
-    {
-      id: ++id,
-      content: "lorem",
-      done: false,
-      userId: 2,
-    },
-    {
-      id: ++id,
-      content: "lorem",
-      done: false,
-      userId: 1,
-    },
-    {
-      id: ++id,
-      content: "lorem",
-      done: false,
-      userId: 1,
-    },
-    {
-      id: ++id,
-      content: "lorem",
-      done: false,
-      userId: 1,
-    },
-  ].map((x) => {
-    const todo = new Todo();
-    Object.assign(todo, x);
-    return todo;
-  });
+  constructor(private prisma: PrismaService) {}
 
-  create(todo: Omit<Todo, "id">): Todo {
-    const newTodo = new Todo();
-    Object.assign(newTodo, {
-      ...todo,
-      id: ++id,
-    });
-
-    this.todos.push(newTodo);
-    return newTodo;
+  async create(todo: Omit<Todo, "id">): Promise<Todo> {
+    const data = await this.prisma.todo.create({ data: todo });
+    return plainToClass(Todo, data);
   }
 
-  findAll(userId: number): Todo[] {
-    return this.todos.filter((x) => x.userId === userId);
+  async findAll(userId: number): Promise<Todo[]> {
+    const data = await this.prisma.todo.findMany({ where: { userId } });
+    return plainToClass(Todo, data);
   }
 
-  findOne(id: number): Todo | undefined {
-    return this.todos.find((x) => x.id == id);
+  async findOne(id: number): Promise<Todo | null> {
+    const data = await this.prisma.todo.findUnique({ where: { id } });
+    return plainToClass(Todo, data);
   }
 
-  update(id: number, todo: Partial<Omit<Todo, "id">>): Todo | undefined {
-    const index = this.todos.findIndex((x) => x.id == id);
-    if (index < 0) {
-      return undefined;
-    }
+  async update(
+    id: number,
+    todo: Partial<Omit<Todo, "id">>
+  ): Promise<Todo | null> {
+    const data = await this.prisma.todo.update({ where: { id }, data: todo });
+    return plainToClass(Todo, data);
+  }
 
-    const newTodo = new Todo();
-    Object.assign(newTodo, {
-      ...this.todos[index],
-      ...todo,
-    });
-
-    this.todos[index] = newTodo;
-    return newTodo;
+  async delete(id: number): Promise<Todo | null> {
+    const data = await this.prisma.todo.delete({ where: { id } });
+    return plainToClass(Todo, data);
   }
 }

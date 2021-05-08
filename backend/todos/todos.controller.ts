@@ -7,6 +7,7 @@ import {
   Req,
   Patch,
   Param,
+  Delete,
 } from "@nestjs/common";
 import { CreateTodoDto } from "./dtos/create-todo.dto";
 import { TodosService } from "./todos.service";
@@ -46,7 +47,14 @@ export class TodosController {
   async update(
     @Body(YupValidationPipe) updateTodoDto: UpdateTodoDto,
     @Param("id") id: string
-  ): Promise<Todo | undefined> {
+  ): Promise<Todo | null> {
     return this.todosService.update(+id, updateTodoDto);
+  }
+
+  @Delete(":id")
+  @UseGuards(PolicyGuard)
+  @CheckPolicy(TodosService.name, Action.Delete)
+  async delete(@Param("id") id: string): Promise<Todo | null> {
+    return this.todosService.delete(+id);
   }
 }

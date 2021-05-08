@@ -1,3 +1,3 @@
 export interface Repository<T> {
-  findOne: (id: number) => T | undefined;
+  findOne: (id: number) => Promise<T | null>;
 }
