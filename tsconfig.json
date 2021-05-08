@@ -24,6 +24,12 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false
   },
-  "include": ["next-env.d.ts", "nest-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "express.d.ts",
+    "express-session.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "exclude": ["node_modules"]
 }

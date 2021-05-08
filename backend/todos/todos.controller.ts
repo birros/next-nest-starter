@@ -12,14 +12,14 @@ import {
 import { CreateTodoDto } from "./dtos/create-todo.dto";
 import { TodosService } from "./todos.service";
 import { Todo } from "./entities/todo.entity";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { YupValidationPipe } from "../common/pipe/yup-validation.pipe";
 import { Request } from "express";
 import { UpdateTodoDto } from "./dtos/update-todo.dto";
 import { Action } from "../security/ability.factory";
 import { CheckPolicy, PolicyGuard } from "../security/policy.guard";
+import { AppAuthGuard } from "../auth/app-auth.guard";
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AppAuthGuard)
 @Controller("todos")
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}

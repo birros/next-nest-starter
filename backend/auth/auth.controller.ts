@@ -1,22 +1,34 @@
-import { Controller, Req, Post, UseGuards, Get } from "@nestjs/common";
+import {
+  Controller,
+  Req,
+  Post,
+  Body,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Request } from "express";
-import { LocalAuthGuard } from "./local-auth.guard";
+import { YupValidationPipe } from "../common/pipe/yup-validation.pipe";
 import { AuthService } from "./auth.service";
-import { JwtAuthGuard } from "./jwt-auth.guard";
+import { LoginDto } from "./dtos/login.dto";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
   @Post("login")
-  async login(@Req() req: Request) {
-    return this.authService.login(req.user);
+  async login(
+    @Body(YupValidationPipe) { email, password }: LoginDto,
+    @Req() req: Request
+  ) {
+    const user = await this.authService.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    req.session.user = user;
+    return user;
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get("me")
-  async me(@Req() req: Request) {
-    return req.user;
+  @Post("logout")
+  async logout(@Req() req: Request) {
+    req.session.user = undefined;
   }
 }
