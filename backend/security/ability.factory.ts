@@ -6,8 +6,8 @@ import {
   InferSubjects,
 } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
-import { Todo } from "../todos/entities/todo.entity";
-import { User } from "../users/entities/user.entity";
+import { Todo } from "../todos/models/todo.model";
+import { User } from "../users/models/user.model";
 
 export enum Action {
   Manage = "manage",

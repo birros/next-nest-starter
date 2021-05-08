@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { CreateTodoDto } from "./dtos/create-todo.dto";
 import { TodosService } from "./todos.service";
-import { Todo } from "./entities/todo.entity";
+import { Todo } from "./models/todo.model";
 import { YupValidationPipe } from "../common/pipe/yup-validation.pipe";
 import { Request } from "express";
 import { UpdateTodoDto } from "./dtos/update-todo.dto";

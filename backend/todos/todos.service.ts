@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { plainToClass } from "class-transformer";
 import { Repository } from "../common/interfaces/repository.interface";
 import { PrismaService } from "../prisma/prisma.service";
-import { Todo } from "./entities/todo.entity";
+import { Todo } from "./models/todo.model";
 
 @Injectable()
 export class TodosService implements Repository<Todo> {

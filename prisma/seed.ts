@@ -1,6 +1,12 @@
 import { PrismaClient, User } from "@prisma/client";
+import { AuthService } from "../backend/auth/auth.service";
+import { PrismaService } from "../backend/prisma/prisma.service";
+import { UsersService } from "../backend/users/users.service";
 
 const prisma = new PrismaClient();
+const prismaService = prisma as PrismaService;
+const usersService = new UsersService(prismaService);
+const authService = new AuthService(usersService);
 
 type Name = "alice" | "bob";
 const names: readonly Name[] = ["alice", "bob"];
@@ -18,7 +24,7 @@ async function seedUsers() {
         update: {},
         create: {
           email,
-          password,
+          password: await authService.hashPassword(password),
         },
       });
     })
