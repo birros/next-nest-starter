@@ -6,21 +6,24 @@ import {
   UnauthorizedException,
   InternalServerErrorException,
 } from "@nestjs/common";
+import { ApiDefaultResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { User } from "../users/models/user.model";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dtos/login.dto";
 import { RegisterDto } from "./dtos/register.dto";
+import { UserDto } from "./dtos/user.dto";
 import { AuthValidationPipe } from "./pipes/auth-validation.pipe";
 
+@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("register")
+  @ApiDefaultResponse({ type: UserDto })
   async register(
     @Body(AuthValidationPipe) { email, password }: RegisterDto
-  ): Promise<Omit<User, "password">> {
+  ): Promise<UserDto> {
     const user = await this.authService.register(email, password);
     if (!user) {
       throw new InternalServerErrorException();
@@ -29,10 +32,11 @@ export class AuthController {
   }
 
   @Post("login")
+  @ApiDefaultResponse({ type: UserDto })
   async login(
     @Body(AuthValidationPipe) { email, password }: LoginDto,
     @Req() req: Request
-  ): Promise<Omit<User, "password">> {
+  ): Promise<UserDto> {
     const user = await this.authService.login(email, password);
     if (!user) {
       throw new UnauthorizedException();
@@ -42,6 +46,7 @@ export class AuthController {
   }
 
   @Post("logout")
+  @ApiDefaultResponse()
   async logout(@Req() req: Request): Promise<void> {
     req.session.user = undefined;
   }
