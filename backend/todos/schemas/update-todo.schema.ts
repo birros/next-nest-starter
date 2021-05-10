@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { atLeastOneOf } from "../../common/methods/at-least-one-of.method";
+import { atLeastOneOf } from "../../common/rules/at-least-one-of.rule";
 import { UpdateTodoDto } from "../dtos/update-todo.dto";
 
 export const UpdateTodoSchema: yup.SchemaOf<UpdateTodoDto> = yup

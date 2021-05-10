@@ -9,7 +9,22 @@ export class AuthService {
 
   constructor(private usersService: UsersService) {}
 
-  async validateUser(
+  async register(
+    email: string,
+    password: string
+  ): Promise<Omit<User, "password"> | null> {
+    const user = await this.usersService.create({
+      email,
+      password: await this.hashPassword(password),
+    });
+    if (user) {
+      const { password, ...rest } = user;
+      return rest;
+    }
+    return null;
+  }
+
+  async login(
     email: string,
     password: string
   ): Promise<Omit<User, "password"> | null> {

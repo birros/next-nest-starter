@@ -4,7 +4,8 @@ import {
   PipeTransform,
   BadRequestException,
 } from "@nestjs/common";
-import { ValidationError } from "yup";
+import { SchemaOf, ValidationError } from "yup";
+import { AnyObject } from "yup/lib/types";
 
 interface Error {
   path?: string;
@@ -20,12 +21,22 @@ const serializeValidationError = (err: ValidationError): Error[] => {
 
 @Injectable()
 export class YupValidationPipe implements PipeTransform {
+  protected context: AnyObject | undefined;
+
+  constructor() {}
+
   async transform(value: any, { metatype }: ArgumentMetadata) {
-    const { schema } = metatype?.prototype;
-    if (!schema) return value;
+    const schema = metatype?.prototype?.schema as SchemaOf<{}> | undefined;
+    if (!schema) {
+      return value;
+    }
 
     try {
-      await schema.validate(value, { abortEarly: false, strict: true });
+      await schema.validate(value, {
+        abortEarly: false,
+        strict: true,
+        context: this.context,
+      });
     } catch (err) {
       throw new BadRequestException(serializeValidationError(err));
     }
