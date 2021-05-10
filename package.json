@@ -8,9 +8,10 @@
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed --preview-feature",
     "studio": "prisma studio",
-    "api": "npm run api:yaml && npm run api:client",
+    "api": "npm run api:yaml && npm run api:client && npm run api:fix-basepath",
     "api:yaml": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' --files build-aux/openapi.ts .openapi.yaml",
-    "api:client": "openapi-generator-cli generate -i .openapi.yaml -g typescript-axios -o lib/api"
+    "api:client": "openapi-generator-cli generate -i .openapi.yaml -g typescript-axios -o lib/api",
+    "api:fix-basepath": "sed -i.bak 's/export const BASE_PATH = .*/export const BASE_PATH = \"\"/g' lib/api/base.ts"
   },
   "dependencies": {
     "@casl/ability": "^5.2.2",

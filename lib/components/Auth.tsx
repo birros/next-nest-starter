@@ -3,26 +3,22 @@ import { AuthApiFactory, UsersApiFactory, LoginDto, RegisterDto } from "../api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 async function postRegister(registerDto: RegisterDto) {
-  const { data } = await AuthApiFactory(undefined, "").authControllerRegister(
-    registerDto
-  );
+  const { data } = await AuthApiFactory().authControllerRegister(registerDto);
   return data;
 }
 
 async function postLogin(loginDto: LoginDto) {
-  const { data } = await AuthApiFactory(undefined, "").authControllerLogin(
-    loginDto
-  );
+  const { data } = await AuthApiFactory().authControllerLogin(loginDto);
   return data;
 }
 
 async function postLogout() {
-  const { data } = await AuthApiFactory(undefined, "").authControllerLogout();
+  const { data } = await AuthApiFactory().authControllerLogout();
   return data;
 }
 
 async function getMe() {
-  const { data } = await UsersApiFactory(undefined, "").usersControllerMe();
+  const { data } = await UsersApiFactory().usersControllerMe();
   return data;
 }
 

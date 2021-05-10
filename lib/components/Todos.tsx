@@ -14,7 +14,7 @@ async function patchTodo({
   id,
   ...updateTodoDto
 }: UpdateTodoDto & { id: number }) {
-  const { data } = await TodosApiFactory(undefined, "").todosControllerUpdate(
+  const { data } = await TodosApiFactory().todosControllerUpdate(
     id.toString(),
     updateTodoDto
   );
@@ -22,16 +22,12 @@ async function patchTodo({
 }
 
 async function deleteTodo(id: number) {
-  const { data } = await TodosApiFactory(undefined, "").todosControllerDelete(
-    id.toString()
-  );
+  const { data } = await TodosApiFactory().todosControllerDelete(id.toString());
   return data;
 }
 
 async function addTodo(createTodoDto: CreateTodoDto) {
-  const { data } = await TodosApiFactory(undefined, "").todosControllerCreate(
-    createTodoDto
-  );
+  const { data } = await TodosApiFactory().todosControllerCreate(createTodoDto);
   return data;
 }
 
