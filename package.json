@@ -7,7 +7,10 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed --preview-feature",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "api": "npm run api:yaml && npm run api:client",
+    "api:yaml": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' --files build-aux/openapi.ts .openapi.yaml",
+    "api:client": "openapi-generator-cli generate -i .openapi.yaml -g typescript-axios -o lib/api"
   },
   "dependencies": {
     "@casl/ability": "^5.2.2",
@@ -21,7 +24,9 @@
     "next": "^10.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-query": "^3.16.0",
     "secure-password": "^4.0.0",
+    "session-file-store": "^1.5.0",
     "swagger-ui-express": "^4.1.6",
     "yup": "^0.32.9"
   },
@@ -29,6 +34,7 @@
     "@babel/core": "^7.14.0",
     "@babel/plugin-proposal-decorators": "^7.13.15",
     "@nestjs/platform-express": "^7.6.15",
+    "@openapitools/openapi-generator-cli": "^2.2.6",
     "@types/express-session": "^1.17.3",
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.5",
@@ -40,6 +46,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "yaml": "^1.10.2"
   }
 }

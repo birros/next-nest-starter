@@ -14,12 +14,12 @@ import { RegisterDto } from "./dtos/register.dto";
 import { UserDto } from "./dtos/user.dto";
 import { AuthValidationPipe } from "./pipes/auth-validation.pipe";
 
-@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("register")
+  @ApiTags("auth")
   @ApiDefaultResponse({ type: UserDto })
   async register(
     @Body(AuthValidationPipe) { email, password }: RegisterDto
@@ -32,6 +32,7 @@ export class AuthController {
   }
 
   @Post("login")
+  @ApiTags("auth")
   @ApiDefaultResponse({ type: UserDto })
   async login(
     @Body(AuthValidationPipe) { email, password }: LoginDto,
@@ -46,6 +47,7 @@ export class AuthController {
   }
 
   @Post("logout")
+  @ApiTags("auth")
   @ApiDefaultResponse()
   async logout(@Req() req: Request): Promise<void> {
     req.session.user = undefined;

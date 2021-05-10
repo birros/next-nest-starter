@@ -5,10 +5,10 @@ import { AppAuthGuard } from "../auth/app-auth.guard";
 import { MeDto } from "./dtos/me.dto";
 
 @UseGuards(AppAuthGuard)
-@ApiTags("users")
 @Controller("users")
 export class UsersController {
   @Get("me")
+  @ApiTags("users")
   @ApiDefaultResponse({ type: MeDto })
   async me(@Req() req: Request) {
     return req.user;

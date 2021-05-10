@@ -21,12 +21,12 @@ import { AppAuthGuard } from "../auth/app-auth.guard";
 import { ApiDefaultResponse, ApiTags, getSchemaPath } from "@nestjs/swagger";
 
 @UseGuards(AppAuthGuard)
-@ApiTags("todos")
 @Controller("todos")
 export class TodosController {
   constructor(private readonly todosService: TodosRepository) {}
 
   @Post()
+  @ApiTags("todos")
   @ApiDefaultResponse({ type: Todo })
   async create(
     @Body(YupValidationPipe) createTodoDto: CreateTodoDto,
@@ -40,6 +40,7 @@ export class TodosController {
   }
 
   @Get()
+  @ApiTags("todos")
   @ApiDefaultResponse({
     schema: {
       type: "array",
@@ -53,6 +54,7 @@ export class TodosController {
   @Patch(":id")
   @UseGuards(PolicyGuard)
   @CheckPolicy(TodosRepository.name, Action.Update)
+  @ApiTags("todos")
   @ApiDefaultResponse({ type: Todo })
   async update(
     @Body(YupValidationPipe) updateTodoDto: UpdateTodoDto,
@@ -64,6 +66,7 @@ export class TodosController {
   @Delete(":id")
   @UseGuards(PolicyGuard)
   @CheckPolicy(TodosRepository.name, Action.Delete)
+  @ApiTags("todos")
   @ApiDefaultResponse({ type: Todo })
   async delete(@Param("id") id: string): Promise<Todo | null> {
     return this.todosService.delete(+id);

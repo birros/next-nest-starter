@@ -3,3 +3,8 @@ node_modules
 .env.local
 dev.db
 dev.db-journal
+lib/api
+op
+.openapi.yaml
+yarn-error.log
+sessions

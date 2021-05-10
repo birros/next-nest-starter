@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 import { UseSchema } from "../../common/decorators/use-schema.decorator";
 import { UpdateTodoSchema } from "../schemas/update-todo.schema";
 
 @UseSchema(UpdateTodoSchema)
 export class UpdateTodoDto {
-  @ApiProperty()
+  @ApiPropertyOptional({})
   content?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   done?: boolean;
 }

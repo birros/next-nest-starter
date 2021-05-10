@@ -5,13 +5,18 @@ import { Server } from "http";
 import { NextApiHandler } from "next";
 import { INestApplication } from "@nestjs/common";
 import session from "express-session";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
+
+var FileStore = require("session-file-store")(session);
 
 let app: INestApplication;
+let doc: OpenAPIObject;
 
-async function getApp() {
+export async function getAppAndDoc(): Promise<
+  [INestApplication, OpenAPIObject]
+> {
   if (app) {
-    return app;
+    return [app, doc];
   }
 
   app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -23,6 +28,8 @@ async function getApp() {
       secret: process.env.SESSION_SECRET ?? "secret",
       resave: false,
       saveUninitialized: false,
+      store: new FileStore(),
+      cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 1 day
     })
   );
 
@@ -31,15 +38,15 @@ async function getApp() {
     .setTitle("Api Documentation")
     .setVersion("1.0")
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+  doc = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup("api", app, doc);
 
   await app.init();
-  return app;
+  return [app, doc];
 }
 
 export async function getNestListener() {
-  const app = await getApp();
+  const [app] = await getAppAndDoc();
   const server = app.getHttpServer() as Server;
   const [listener] = server.listeners("request") as NextApiHandler[];
   return listener;
