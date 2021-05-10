@@ -5,7 +5,7 @@ import { plainToClass } from "class-transformer";
 import { Repository } from "../common/interfaces/repository.interface";
 
 @Injectable()
-export class UsersService implements Repository<User> {
+export class UsersRepository implements Repository<User> {
   constructor(private prisma: PrismaService) {}
 
   async create(user: Omit<User, "id">): Promise<User | null> {

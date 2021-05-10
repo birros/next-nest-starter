@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import SecurePassword from "secure-password";
 import { User } from "../users/models/user.model";
-import { UsersService } from "../users/users.service";
+import { UsersRepository } from "../users/users.repository";
 
 @Injectable()
 export class AuthService {
   private sp: SecurePassword = new SecurePassword();
 
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersRepository) {}
 
   async register(
     email: string,

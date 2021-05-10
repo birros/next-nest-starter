@@ -5,7 +5,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Todo } from "./models/todo.model";
 
 @Injectable()
-export class TodosService implements Repository<Todo> {
+export class TodosRepository implements Repository<Todo> {
   constructor(private prisma: PrismaService) {}
 
   async create(todo: Omit<Todo, "id">): Promise<Todo> {

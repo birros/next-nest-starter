@@ -10,7 +10,7 @@ import {
   Delete,
 } from "@nestjs/common";
 import { CreateTodoDto } from "./dtos/create-todo.dto";
-import { TodosService } from "./todos.service";
+import { TodosRepository } from "./todos.repository";
 import { Todo } from "./models/todo.model";
 import { YupValidationPipe } from "../common/pipes/yup-validation.pipe";
 import { Request } from "express";
@@ -24,7 +24,7 @@ import { ApiDefaultResponse, ApiTags, getSchemaPath } from "@nestjs/swagger";
 @ApiTags("todos")
 @Controller("todos")
 export class TodosController {
-  constructor(private readonly todosService: TodosService) {}
+  constructor(private readonly todosService: TodosRepository) {}
 
   @Post()
   @ApiDefaultResponse({ type: Todo })
@@ -52,7 +52,7 @@ export class TodosController {
 
   @Patch(":id")
   @UseGuards(PolicyGuard)
-  @CheckPolicy(TodosService.name, Action.Update)
+  @CheckPolicy(TodosRepository.name, Action.Update)
   @ApiDefaultResponse({ type: Todo })
   async update(
     @Body(YupValidationPipe) updateTodoDto: UpdateTodoDto,
@@ -63,7 +63,7 @@ export class TodosController {
 
   @Delete(":id")
   @UseGuards(PolicyGuard)
-  @CheckPolicy(TodosService.name, Action.Delete)
+  @CheckPolicy(TodosRepository.name, Action.Delete)
   @ApiDefaultResponse({ type: Todo })
   async delete(@Param("id") id: string): Promise<Todo | null> {
     return this.todosService.delete(+id);

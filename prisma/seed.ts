@@ -1,11 +1,11 @@
 import { PrismaClient, User } from "@prisma/client";
 import { AuthService } from "../backend/auth/auth.service";
 import { PrismaService } from "../backend/prisma/prisma.service";
-import { UsersService } from "../backend/users/users.service";
+import { UsersRepository } from "../backend/users/users.repository";
 
 const prisma = new PrismaClient();
 const prismaService = prisma as PrismaService;
-const usersService = new UsersService(prismaService);
+const usersService = new UsersRepository(prismaService);
 const authService = new AuthService(usersService);
 
 type Name = "alice" | "bob";
