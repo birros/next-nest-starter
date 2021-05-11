@@ -10,7 +10,8 @@ async function main() {
   const yamlString: string = yaml.stringify(doc, {});
   fs.writeFileSync(outputFile, yamlString);
 
-  app.close();
+  await app.close();
+  process.exit(0);
 }
 
 main();

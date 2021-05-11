@@ -6,8 +6,10 @@ import { NextApiHandler } from "next";
 import { INestApplication } from "@nestjs/common";
 import session from "express-session";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
+import redis from "redis";
 
-var FileStore = require("session-file-store")(session);
+const RedisStore = require("connect-redis")(session);
+const redisClient = redis.createClient(process.env.REDIS_URL ?? "");
 
 let app: INestApplication;
 let doc: OpenAPIObject;
@@ -28,7 +30,7 @@ export async function getAppAndDoc(): Promise<
       secret: process.env.SESSION_SECRET ?? "secret",
       resave: false,
       saveUninitialized: false,
-      store: new FileStore(),
+      store: new RedisStore({ client: redisClient }),
       cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 1 day
     })
   );

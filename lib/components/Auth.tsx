@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { AuthApiFactory, UsersApiFactory, LoginDto, RegisterDto } from "../api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -23,28 +23,29 @@ async function getMe() {
 }
 
 const Auth: React.FC = () => {
-  const queryClient = useQueryClient();
   const { data: me, isLoading } = useQuery("me", getMe, { retry: 0 });
 
+  const queryClient = useQueryClient();
+
   const login = useMutation(postLogin, {
-    onSettled: () => {
-      queryClient.resetQueries();
-    },
+    onSettled: () => queryClient.resetQueries(),
   });
 
   const logout = useMutation(postLogout, {
-    onSettled: () => {
-      queryClient.resetQueries();
-    },
+    onSettled: () => queryClient.resetQueries(),
   });
 
   const register = useMutation(postRegister, {
-    onSettled: () => {
-      queryClient.resetQueries();
-    },
+    onSettled: () => queryClient.resetQueries(),
   });
 
-  if (isLoading) {
+  const loading = useMemo(
+    () =>
+      isLoading || login.isLoading || logout.isLoading || register.isLoading,
+    [isLoading, login.isLoading, logout.isLoading, register.isLoading]
+  );
+
+  if (loading) {
     return <span>Loading...</span>;
   }
 
@@ -54,22 +55,46 @@ const Auth: React.FC = () => {
 
   return (
     <>
-      <div>
-        <span>Login: </span>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!(e.target instanceof HTMLFormElement)) {
-              return;
-            }
-            const formData = new FormData(e.target);
-            const loginDto: LoginDto = {
-              email: formData.get("email")?.toString() ?? "",
-              password: formData.get("password")?.toString() ?? "",
-            };
-            login.mutate(loginDto);
-          }}
-        >
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (!(e.target instanceof HTMLFormElement)) {
+            return;
+          }
+          const formData = new FormData(e.target);
+          const registerDto: RegisterDto = {
+            email: formData.get("email")?.toString() ?? "",
+            password: formData.get("password")?.toString() ?? "",
+            confirm: formData.get("confirm")?.toString() ?? "",
+          };
+          register.mutate(registerDto);
+        }}
+      >
+        <fieldset>
+          <legend>Register</legend>
+          <input type="email" name="email" placeholder="email" />
+          <input type="password" name="password" placeholder="password" />
+          <input type="password" name="confirm" placeholder="confirm" />
+          <input type="submit" />
+        </fieldset>
+      </form>
+
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (!(e.target instanceof HTMLFormElement)) {
+            return;
+          }
+          const formData = new FormData(e.target);
+          const loginDto: LoginDto = {
+            email: formData.get("email")?.toString() ?? "",
+            password: formData.get("password")?.toString() ?? "",
+          };
+          login.mutate(loginDto);
+        }}
+      >
+        <fieldset>
+          <legend>Login</legend>
           <input id="name" type="email" name="email" placeholder="email" />
           <input
             id="password"
@@ -78,32 +103,8 @@ const Auth: React.FC = () => {
             placeholder="password"
           />
           <input type="submit" />
-        </form>
-      </div>
-
-      <div>
-        <span>Register: </span>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!(e.target instanceof HTMLFormElement)) {
-              return;
-            }
-            const formData = new FormData(e.target);
-            const registerDto: RegisterDto = {
-              email: formData.get("email")?.toString() ?? "",
-              password: formData.get("password")?.toString() ?? "",
-              confirm: formData.get("confirm")?.toString() ?? "",
-            };
-            register.mutate(registerDto);
-          }}
-        >
-          <input type="email" name="email" placeholder="email" />
-          <input type="password" name="password" placeholder="password" />
-          <input type="confirm" name="confirm" placeholder="confirm" />
-          <input type="submit" />
-        </form>
-      </div>
+        </fieldset>
+      </form>
     </>
   );
 };
